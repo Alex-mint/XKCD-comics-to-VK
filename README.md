@@ -21,7 +21,7 @@ pip install -r requirements.txt
 
 ### Как запустить
 
-$ python publish_comic_vk.py
+$ python main.py
 
 ### Цель проекта
 
