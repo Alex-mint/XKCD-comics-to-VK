@@ -97,11 +97,13 @@ def main():
     load_dotenv()
     group_id = os.getenv("GROUP_ID")
     path = "comics.png"
-    client_id = os.getenv("CLIENT_ID")
-    vk_token = os.getenv("VK_TOKEN")
-    message = download_random_comics(path)
-    publish_comics(vk_token, client_id, group_id, message, path)
-    os.remove(path)
+    try:
+        client_id = os.getenv("CLIENT_ID")
+        vk_token = os.getenv("VK_TOKEN")
+        message = download_random_comics(path)
+        publish_comics(vk_token, client_id, group_id, message, path)
+    finally:
+        os.remove(path)
 
 
 if __name__ == "__main__":
