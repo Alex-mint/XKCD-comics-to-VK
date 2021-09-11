@@ -51,12 +51,12 @@ def send_image_to_vk(upload_url, path):
             "photo": file,
         }
         response = requests.post(upload_url, files=files)
-        response.status_code
-        response = response.json()
-        server = response["server"]
-        photo = response["photo"]
-        image_hash = response["hash"]
-        return server, photo, image_hash
+    response.status_code
+    response = response.json()
+    server = response["server"]
+    photo = response["photo"]
+    image_hash = response["hash"]
+    return server, photo, image_hash
 
 
 def save_image_in_vk(vk_token,server, photo, image_hash):
