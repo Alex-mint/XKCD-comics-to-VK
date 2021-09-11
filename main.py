@@ -76,7 +76,7 @@ def save_image_in_vk(vk_token,server, photo, image_hash):
     return owner_id, media_id
 
 
-def publishing_comics(vk_token, client_id, group_id, message, path):
+def publish_comics(vk_token, client_id, group_id, message, path):
     upload_url = get_upload_url(vk_token)
     server, photo, image_hash = send_image_to_vk(upload_url, path)
     owner_id, media_id = save_image_in_vk(vk_token, server, photo, image_hash)
@@ -100,7 +100,7 @@ def main():
     client_id = os.getenv("CLIENT_ID")
     vk_token = os.getenv("VK_TOKEN")
     message = download_random_comics(path)
-    publishing_comics(vk_token, client_id, group_id, message, path)
+    publish_comics(vk_token, client_id, group_id, message, path)
     os.remove(path)
 
 
