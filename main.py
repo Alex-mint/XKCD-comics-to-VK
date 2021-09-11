@@ -105,12 +105,12 @@ def publish_comics(vk_token, client_id, group_id, message, path):
 
 
 def main():
+    path = "comics.png"
     load_dotenv()
     group_id = os.getenv("GROUP_ID")
-    path = "comics.png"
+    client_id = os.getenv("CLIENT_ID")
+    vk_token = os.getenv("VK_TOKEN")
     try:
-        client_id = os.getenv("CLIENT_ID")
-        vk_token = os.getenv("VK_TOKEN")
         message = download_random_comics(path)
         publish_comics(vk_token, client_id, group_id, message, path)
     except requests.HTTPError():
