@@ -13,7 +13,7 @@ def get_comics_amount():
     return response["num"]
 
 
-def fetch_comics(path):
+def download_random_comics(path):
     comics_number = get_comics_amount()
     choice_comics = random.randint(1, comics_number)
     url = f"https://xkcd.com/{choice_comics}/info.0.json"
@@ -99,7 +99,7 @@ def main():
     path = "comics.png"
     client_id = os.getenv("CLIENT_ID")
     vk_token = os.getenv("VK_TOKEN")
-    message = fetch_comics(path)
+    message = download_random_comics(path)
     publishing_comics(vk_token, client_id, group_id, message, path)
     os.remove(path)
 
