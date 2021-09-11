@@ -45,8 +45,8 @@ def get_upload_url(vk_token):
     return upload_url
 
 
-def send_image_to_vk(upload_url):
-    with open('comics.png', 'rb') as file:
+def send_image_to_vk(upload_url, path):
+    with open(path, 'rb') as file:
         files = {
             "photo": file,
         }
@@ -76,9 +76,9 @@ def save_image_in_vk(vk_token,server, photo, image_hash):
     return owner_id, media_id
 
 
-def publishing_comics(vk_token, client_id, group_id, message):
+def publishing_comics(vk_token, client_id, group_id, message, path):
     upload_url = get_upload_url(vk_token)
-    server, photo, image_hash = send_image_to_vk(upload_url)
+    server, photo, image_hash = send_image_to_vk(upload_url, path)
     owner_id, media_id = save_image_in_vk(vk_token, server, photo, image_hash)
     url = "https://api.vk.com/method/wall.post"
     params = {
@@ -100,7 +100,7 @@ def main():
     client_id = os.getenv("CLIENT_ID")
     vk_token = os.getenv("VK_TOKEN")
     message = fetch_comics(path)
-    publishing_comics(vk_token, client_id, group_id, message)
+    publishing_comics(vk_token, client_id, group_id, message, path)
     os.remove(path)
 
 
