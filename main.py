@@ -15,8 +15,8 @@ def get_comics_amount():
 
 def download_random_comics(path):
     comics_number = get_comics_amount()
-    choice_comics = random.randint(1, comics_number)
-    url = f"https://xkcd.com/{choice_comics}/info.0.json"
+    random_comics = random.randint(1, comics_number)
+    url = f"https://xkcd.com/{random_comics}/info.0.json"
     response = requests.get(url)
     response.status_code
     response = response.json()
