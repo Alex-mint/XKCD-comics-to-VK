@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 def get_comics_amount():
     url = "https://xkcd.com/info.0.json"
     response = requests.get(url)
-    response.status_code
+    response.raise_for_status()
     response = response.json()
     return response["num"]
 
@@ -18,7 +18,7 @@ def download_random_comics(path):
     random_comics = random.randint(1, comics_number)
     url = f"https://xkcd.com/{random_comics}/info.0.json"
     response = requests.get(url)
-    response.status_code
+    response.raise_for_status()
     response = response.json()
     link = response["img"]
     download_image(link, path)
@@ -28,7 +28,7 @@ def download_random_comics(path):
 
 def download_image(link, path):
     response = requests.get(link)
-    response.status_code
+    response.raise_for_status()
     with open(path, "wb") as file:
         file.write(response.content)
 
@@ -40,8 +40,11 @@ def get_upload_url(vk_token):
         "v": "5.131"
     }
     response = requests.get(url, params=params)
-    response.status_code
-    upload_url = response.json()["response"]["upload_url"]
+    response.raise_for_status()
+    response = response.json()
+    if response.get('error'):
+        raise requests.HTTPError(response["error"]["error_msg"])
+    upload_url = response["response"]["upload_url"]
     return upload_url
 
 
@@ -51,8 +54,10 @@ def send_image_to_vk(upload_url, path):
             "photo": file,
         }
         response = requests.post(upload_url, files=files)
-    response.status_code
+    response.raise_for_status()
     response = response.json()
+    if response.get('error'):
+        raise requests.HTTPError(response["error"]["error_msg"])
     server = response["server"]
     photo = response["photo"]
     image_hash = response["hash"]
@@ -69,8 +74,11 @@ def save_image_in_vk(vk_token,server, photo, image_hash):
         "v": "5.131"
     }
     response = requests.post(url, params=params)
-    response.status_code
-    response = response.json()["response"][0]
+    response.raise_for_status()
+    response = response.json()
+    if response.get('error'):
+        raise requests.HTTPError(response["error"]["error_msg"])
+    response = response["response"][0]
     owner_id = response["owner_id"]
     media_id = response["id"]
     return owner_id, media_id
@@ -90,7 +98,10 @@ def publish_comics(vk_token, client_id, group_id, message, path):
         "v": "5.131"
     }
     response = requests.post(url, params=params)
-    response.status_code
+    response.raise_for_status()
+    response = response.json()
+    if response.get('error'):
+        raise requests.HTTPError(response["error"]["error_msg"])
 
 
 def main():
@@ -102,6 +113,8 @@ def main():
         vk_token = os.getenv("VK_TOKEN")
         message = download_random_comics(path)
         publish_comics(vk_token, client_id, group_id, message, path)
+    except requests.HTTPError():
+        print("requests.HTTPError")
     finally:
         os.remove(path)
 
