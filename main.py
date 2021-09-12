@@ -113,8 +113,8 @@ def main():
     try:
         message = download_random_comics(path)
         publish_comics(vk_token, client_id, group_id, message, path)
-    except requests.HTTPError():
-        print("requests.HTTPError")
+    except requests.HTTPError as http_error:
+        print(http_error)
     finally:
         os.remove(path)
 
