@@ -64,7 +64,7 @@ def send_image_to_vk(upload_url, path):
     return server, photo, image_hash
 
 
-def save_image_in_vk(vk_token,server, photo, image_hash):
+def save_image_in_vk(vk_token, server, photo, image_hash):
     url = "https://api.vk.com/method/photos.saveWallPhoto"
     params = {
         "access_token": vk_token,
