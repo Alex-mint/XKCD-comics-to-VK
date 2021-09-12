@@ -42,21 +42,21 @@ def get_upload_url(vk_token):
     response = requests.get(url, params=params)
     response.raise_for_status()
     response = response.json()
-    if response.get('error'):
+    if response.get("error"):
         raise requests.HTTPError(response["error"]["error_msg"])
     upload_url = response["response"]["upload_url"]
     return upload_url
 
 
 def send_image_to_vk(upload_url, path):
-    with open(path, 'rb') as file:
+    with open(path, "rb") as file:
         files = {
             "photo": file,
         }
         response = requests.post(upload_url, files=files)
     response.raise_for_status()
     response = response.json()
-    if response.get('error'):
+    if response.get("error"):
         raise requests.HTTPError(response["error"]["error_msg"])
     server = response["server"]
     photo = response["photo"]
@@ -76,7 +76,7 @@ def save_image_in_vk(vk_token, server, photo, image_hash):
     response = requests.post(url, params=params)
     response.raise_for_status()
     response = response.json()
-    if response.get('error'):
+    if response.get("error"):
         raise requests.HTTPError(response["error"]["error_msg"])
     response = response["response"][0]
     owner_id = response["owner_id"]
@@ -100,7 +100,7 @@ def publish_comics(vk_token, client_id, group_id, message, path):
     response = requests.post(url, params=params)
     response.raise_for_status()
     response = response.json()
-    if response.get('error'):
+    if response.get("error"):
         raise requests.HTTPError(response["error"]["error_msg"])
 
 
