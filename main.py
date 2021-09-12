@@ -40,10 +40,7 @@ def get_upload_url(vk_token):
         "v": "5.131"
     }
     response = requests.get(url, params=params)
-    response.raise_for_status()
-    response = response.json()
-    if response.get("error"):
-        raise requests.HTTPError(response["error"]["error_msg"])
+    response = verify_vk_response(response)
     upload_url = response["response"]["upload_url"]
     return upload_url
 
@@ -54,10 +51,7 @@ def send_image_to_vk(upload_url, path):
             "photo": file,
         }
         response = requests.post(upload_url, files=files)
-    response.raise_for_status()
-    response = response.json()
-    if response.get("error"):
-        raise requests.HTTPError(response["error"]["error_msg"])
+    response = verify_vk_response(response)
     server = response["server"]
     photo = response["photo"]
     image_hash = response["hash"]
@@ -74,10 +68,7 @@ def save_image_in_vk(vk_token, server, photo, image_hash):
         "v": "5.131"
     }
     response = requests.post(url, params=params)
-    response.raise_for_status()
-    response = response.json()
-    if response.get("error"):
-        raise requests.HTTPError(response["error"]["error_msg"])
+    response = verify_vk_response(response)
     response = response["response"][0]
     owner_id = response["owner_id"]
     media_id = response["id"]
@@ -99,9 +90,15 @@ def publish_comics(vk_token, client_id, group_id, message, path):
     }
     response = requests.post(url, params=params)
     response.raise_for_status()
+    verify_vk_response(response)
+
+
+def verify_vk_response(response):
+    response.raise_for_status()
     response = response.json()
     if response.get("error"):
         raise requests.HTTPError(response["error"]["error_msg"])
+    return response
 
 
 def main():
