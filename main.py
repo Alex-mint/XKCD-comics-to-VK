@@ -75,7 +75,7 @@ def save_image_in_vk(vk_token, server, photo, image_hash):
     return owner_id, media_id
 
 
-def publish_comics(vk_token, client_id, group_id, message, path):
+def publish_comics(vk_token, from_group, group_id, message, path):
     upload_url = get_upload_url(vk_token)
     server, photo, image_hash = send_image_to_vk(upload_url, path)
     owner_id, media_id = save_image_in_vk(vk_token, server, photo, image_hash)
@@ -83,7 +83,7 @@ def publish_comics(vk_token, client_id, group_id, message, path):
     params = {
         "access_token": vk_token,
         "owner_id": int(f"-{group_id}"),
-        "from_group": client_id,
+        "from_group": from_group,
         "attachments": f"photo{owner_id}_{media_id}",
         "message": message,
         "v": "5.131"
@@ -102,13 +102,13 @@ def verify_vk_response(response):
 
 def main():
     path = "comics.png"
+    from_group = 1
     load_dotenv()
     group_id = os.getenv("GROUP_ID")
-    client_id = os.getenv("CLIENT_ID")
     vk_token = os.getenv("VK_TOKEN")
     try:
         message = download_random_comics(path)
-        publish_comics(vk_token, client_id, group_id, message, path)
+        publish_comics(vk_token, from_group, group_id, message, path)
     except requests.HTTPError as http_error:
         print(http_error)
     finally:
