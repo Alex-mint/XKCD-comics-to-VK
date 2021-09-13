@@ -89,7 +89,6 @@ def publish_comics(vk_token, client_id, group_id, message, path):
         "v": "5.131"
     }
     response = requests.post(url, params=params)
-    response.raise_for_status()
     verify_vk_response(response)
 
 
